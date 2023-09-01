@@ -1,6 +1,6 @@
 'use client'
 
-import { FieldValues, UseFormRegister } from 'react-hook-form'
+import { FieldErrors, FieldValues, UseFormRegister } from 'react-hook-form'
 
 interface InputProps {
 	fullWidth?: boolean
@@ -11,11 +11,14 @@ interface InputProps {
 	type?: string
 	disabled?: boolean
 	marginLeft?: boolean
+	errors: FieldErrors
 }
 
-const input: React.FC<InputProps> = ({ marginLeft, disabled, fullWidth, id, placeholder, register, required, type = "text" }) => {
+const input: React.FC<InputProps> = ({ errors, marginLeft, disabled, fullWidth, id, placeholder, register, required, type = "text" }) => {
 	return (
-		<input disabled={disabled} className={`${marginLeft ? 'ml-5' : ''} bg-transparent' mb-7 outline-none border-b border-main-color py-2 ${fullWidth ? 'w-full' : ''}`} id={id} placeholder={placeholder} { ...register(id, { required }) } type={type} />
+		<input disabled={disabled} id={id} placeholder={placeholder} { ...register(id, { required }) } type={type}
+			className={`${errors[id] ? 'bg-rose-200' : 'bg-transparent'} ${marginLeft ? 'ml-5' : ''} mb-7 outline-none border-b ${errors[id] ? 'border-rose-800' : 'border-main-color'} pl-2 py-2 ${fullWidth ? 'w-full' : ''}`}
+		/>
 	)
 }
 

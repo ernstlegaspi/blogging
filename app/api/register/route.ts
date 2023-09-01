@@ -9,11 +9,19 @@ export async function POST(request: Request) {
 
 		const { firstName, lastName, email, password } = body
 
-		if(!firstName || !lastName || !email || !password) return new NextResponse('Internal Error', { status: 500 })
+		if(!firstName || !lastName || !email || !password) return new NextResponse('Invalid Fields', { status: 500 })
 
 		const hashedPassword = await bcrypt.hash(password, 12)
 
 		if(!hashedPassword) return new NextResponse('Internal Error', { status: 500 })
+
+		const existingUser = await prisma.user.findUnique({
+			where: {
+				email
+			}
+		})
+
+		if(existingUser) return new NextResponse('Email existing', { status: 500 })
 		
 		const newUser = await prisma.user.create({
 			data: {
